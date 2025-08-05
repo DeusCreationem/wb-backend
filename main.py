@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends
 from pydantic import BaseModel
 import telebot
-
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from database import Base, SessionLocal, engine          # <- импортируем Base отсюда
 import models                                            # <- регистрируем модели
@@ -16,6 +16,15 @@ bot = telebot.TeleBot(TOKEN)
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://gilded-gumdrop-f1c23e.netlify.app"],
+    allow_methods=["POST"],
+    allow_headers=["*"],
+)
+
 
 class ApplicationForm(BaseModel):
     name: str
